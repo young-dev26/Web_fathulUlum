@@ -26,6 +26,7 @@ class StudentLeaveRequestController extends Controller
     public function indexForReview(Request $request): View
     {
         $requests = StudentLeaveRequest::with(['student', 'reviewer'])
+            ->when($request->user()?->effectiveRole() === 'guru', fn ($query) => $query->whereHas('student', fn ($student) => $student->where('unit', $request->user()->unit)))
             ->when($request->filled('q'), fn ($query) => $query->whereHas('student', fn ($student) => $student->where('nama_lengkap', 'like', '%'.$request->string('q').'%')->orWhere('nisn', 'like', '%'.$request->string('q').'%')))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
             ->when($request->filled('jenis_izin'), fn ($query) => $query->where('jenis_izin', $request->string('jenis_izin')))
@@ -62,6 +63,7 @@ class StudentLeaveRequestController extends Controller
     public function review(Request $request, StudentLeaveRequest $leaveRequest): RedirectResponse
     {
         abort_unless(in_array(auth()->user()->effectiveRole(), ['admin', 'guru'], true), 403);
+        abort_unless(auth()->user()->effectiveRole() !== 'guru' || $leaveRequest->student->unit === auth()->user()->unit, 403);
 
         $validated = $request->validate([
             'action' => ['required', 'in:approve,reject'],

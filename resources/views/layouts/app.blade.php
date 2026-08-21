@@ -82,9 +82,9 @@
             <a href="{{ route('login') }}"
                 class="hidden sm:inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-amber-600"><i
                     class="fa-solid fa-arrow-right-to-bracket"></i> Portal Administrasi</a>
-            <button type="button" data-menu-toggle aria-expanded="false" class="grid h-10 w-10 place-items-center rounded-lg border border-emerald-900/10 text-emerald-900 sm:hidden" title="Buka menu navigasi"><i class="fa-solid fa-bars"></i></button>
+            <button type="button" data-menu-toggle aria-expanded="false" class="grid h-10 w-10 place-items-center rounded-lg border border-emerald-900/10 text-emerald-900 xl:hidden" title="Buka menu navigasi"><i class="fa-solid fa-bars"></i></button>
         </div>
-        <nav id="mobile-nav" class="hidden border-t border-emerald-950/10 bg-white px-5 py-4 sm:hidden">
+        <nav id="mobile-nav" class="hidden border-t border-emerald-950/10 bg-white px-5 py-4 xl:hidden">
             <div class="grid gap-1 text-sm font-bold text-slate-600">
                 <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="{{ route('home') }}">Beranda</a>
                 <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="#profil">Profil Yayasan</a>

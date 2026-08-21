@@ -108,4 +108,48 @@ class StudentLeaveRequestTest extends TestCase
         $duplicate = $this->postJson(route('dashboard.scan.manual'), ['student_id' => $student->id]);
         $duplicate->assertStatus(409);
     }
+
+    public function test_teacher_can_only_access_students_and_leave_requests_in_their_unit(): void
+    {
+        $teacher = Teacher::create([
+            'email' => 'guru.mts@fathululum.sch.id',
+            'password' => 'password',
+            'nip_nuptk' => '19850100',
+            'nama_lengkap' => 'Guru MTs',
+            'unit' => 'mts',
+        ]);
+        $student = Student::create([
+            'email' => 'siswa.mi@fathululum.sch.id',
+            'password' => 'password',
+            'nisn' => '0090000002',
+            'qr_code_key' => 'qr-mi-2',
+            'nama_lengkap' => 'Siswa MI',
+            'unit' => 'mi',
+            'kelas' => 6,
+            'jenis_kelamin' => 'L',
+            'status_aktif' => true,
+        ]);
+        $leaveRequest = StudentLeaveRequest::create([
+            'student_id' => $student->id,
+            'jenis_izin' => 'sakit',
+            'tanggal_mulai' => '2026-08-21',
+            'tanggal_selesai' => '2026-08-21',
+            'keterangan' => 'Tidak enak badan',
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($teacher);
+
+        $this->getJson(route('dashboard.scan.students', ['q' => 'Siswa']))
+            ->assertOk()
+            ->assertJsonCount(0, 'students');
+        $this->postJson(route('dashboard.scan.manual'), ['student_id' => $student->id])
+            ->assertNotFound();
+        $this->get(route('dashboard.leave-requests.review-index'))
+            ->assertOk()
+            ->assertDontSee('Siswa MI');
+        $this->post(route('dashboard.leave-requests.review', $leaveRequest), [
+            'action' => 'approve',
+        ])->assertForbidden();
+    }
 }

@@ -103,7 +103,7 @@
                 @endif
             </nav>
 
-            <div class="dashboard-account hidden border-t border-white/10 p-5 lg:block">
+            <div class="dashboard-account border-t border-white/10 p-5">
                 <p class="truncate text-sm font-bold">{{ auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'Pengguna' }}</p>
                 <p class="mt-1 text-xs uppercase text-emerald-100/50">{{ auth()->user()->effectiveRole() ?? 'user' }}</p>
                 <form class="mt-4" action="{{ route('logout') }}" method="post">
@@ -124,6 +124,12 @@
                 <div class="flex items-center gap-3">
                     <span class="hidden text-right sm:block"><strong class="block text-sm text-emerald-950">{{ auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'Pengguna' }}</strong><small class="text-[10px] uppercase tracking-[.15em] text-slate-400">{{ auth()->user()->effectiveRole() ?? 'user' }}</small></span>
                     <span class="grid h-10 w-10 place-items-center rounded-full bg-amber-300 font-display text-lg text-emerald-950">{{ strtoupper(substr(auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'P', 0, 1)) }}</span>
+                    <form class="lg:hidden" action="{{ route('logout') }}" method="post">
+                        @csrf
+                        <button type="submit" class="grid h-10 w-10 place-items-center rounded-lg border border-emerald-900/10 text-emerald-800" title="Keluar" aria-label="Keluar dari portal">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        </button>
+                    </form>
                 </div>
             </header>
             @if (session('status'))
