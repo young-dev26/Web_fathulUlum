@@ -82,17 +82,18 @@
             <a href="{{ route('login') }}"
                 class="hidden sm:inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-amber-600"><i
                     class="fa-solid fa-arrow-right-to-bracket"></i> Portal Administrasi</a>
-            <button type="button" data-menu-toggle aria-expanded="false" class="grid h-10 w-10 place-items-center rounded-lg border border-emerald-900/10 text-emerald-900 xl:hidden" title="Buka menu navigasi"><i class="fa-solid fa-bars"></i></button>
+            <button type="button" data-menu-toggle aria-controls="mobile-nav" aria-expanded="false" class="grid h-10 w-10 place-items-center rounded-lg border border-emerald-900/10 text-emerald-900 xl:hidden" title="Buka menu navigasi"><i class="fa-solid fa-bars"></i></button>
         </div>
-        <nav id="mobile-nav" class="hidden border-t border-emerald-950/10 bg-white px-5 py-4 xl:hidden">
-            <div class="grid gap-1 text-sm font-bold text-slate-600">
-                <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="{{ route('home') }}">Beranda</a>
-                <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="#profil">Profil Yayasan</a>
-                <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="{{ route('mi') }}">Unit MI</a>
-                <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="{{ route('mts') }}">Unit MTs</a>
-                    <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="#lokasi">Lokasi</a>
-                <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="#berita">Berita</a>
-                <a class="mt-2 rounded-lg bg-amber-500 px-3 py-2.5 text-center text-white" href="{{ route('login') }}">Portal Administrasi</a>
+        <nav id="mobile-nav" class="hidden border-t border-emerald-950/10 bg-white px-5 py-3 shadow-lg shadow-emerald-950/5 xl:hidden">
+            <div class="mx-auto grid max-w-7xl text-sm font-bold text-slate-600">
+                <a class="flex items-center justify-between border-b border-slate-100 px-2 py-3 hover:text-emerald-700" href="{{ route('home') }}">Beranda <i class="fa-solid fa-arrow-right text-xs text-amber-500"></i></a>
+                <a class="flex items-center justify-between border-b border-slate-100 px-2 py-3 hover:text-emerald-700" href="#profil">Profil Yayasan <i class="fa-solid fa-arrow-right text-xs text-amber-500"></i></a>
+                <a class="flex items-center justify-between border-b border-slate-100 px-2 py-3 hover:text-emerald-700" href="{{ route('mi') }}">Unit MI <i class="fa-solid fa-arrow-right text-xs text-amber-500"></i></a>
+                <a class="flex items-center justify-between border-b border-slate-100 px-2 py-3 hover:text-emerald-700" href="{{ route('mts') }}">Unit MTs <i class="fa-solid fa-arrow-right text-xs text-amber-500"></i></a>
+                <a class="flex items-center justify-between border-b border-slate-100 px-2 py-3 hover:text-emerald-700" href="#lokasi">Lokasi <i class="fa-solid fa-arrow-right text-xs text-amber-500"></i></a>
+                <a class="flex items-center justify-between border-b border-slate-100 px-2 py-3 hover:text-emerald-700" href="#berita">Berita <i class="fa-solid fa-arrow-right text-xs text-amber-500"></i></a>
+                <a class="flex items-center justify-between border-b border-slate-100 px-2 py-3 hover:text-emerald-700" href="{{ route('ppdb') }}">PPDB Online <i class="fa-solid fa-arrow-right text-xs text-amber-500"></i></a>
+                <a class="mt-3 inline-flex items-center justify-center gap-2 rounded-lg bg-amber-500 px-3 py-3 text-center text-white shadow-sm hover:bg-amber-600" href="{{ route('login') }}"><i class="fa-solid fa-arrow-right-to-bracket"></i> Portal Administrasi</a>
             </div>
         </nav>
     </header>
