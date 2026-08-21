@@ -80,7 +80,7 @@
                     class="hover:text-emerald-700" href="{{ route('ppdb') }}">PPDB Online</a>
             </nav>
             <a href="{{ route('login') }}"
-                class="hidden xl:inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-amber-600"><i
+                class="hidden sm:inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-amber-600"><i
                     class="fa-solid fa-arrow-right-to-bracket"></i> Portal Administrasi</a>
             <button type="button" data-menu-toggle aria-expanded="false" class="grid h-10 w-10 place-items-center rounded-lg border border-emerald-900/10 text-emerald-900 xl:hidden" title="Buka menu navigasi"><i class="fa-solid fa-bars"></i></button>
         </div>
@@ -90,9 +90,8 @@
                 <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="#profil">Profil Yayasan</a>
                 <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="{{ route('mi') }}">Unit MI</a>
                 <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="{{ route('mts') }}">Unit MTs</a>
-                <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="#lokasi">Lokasi</a>
+                    <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="#lokasi">Lokasi</a>
                 <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="#berita">Berita</a>
-                <a class="rounded-lg px-3 py-2 hover:bg-emerald-50" href="{{ route('ppdb') }}">PPDB Online</a>
                 <a class="mt-2 rounded-lg bg-amber-500 px-3 py-2.5 text-center text-white" href="{{ route('login') }}">Portal Administrasi</a>
             </div>
         </nav>
@@ -134,12 +133,6 @@
             menuButton.setAttribute('aria-expanded', String(open));
             menuButton.innerHTML = `<i class="fa-solid fa-${open ? 'xmark' : 'bars'}"></i>`;
         });
-
-        mobileNav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-            mobileNav.classList.add('hidden');
-            menuButton?.setAttribute('aria-expanded', 'false');
-            if (menuButton) menuButton.innerHTML = '<i class="fa-solid fa-bars"></i>';
-        }));
 
         const revealItems = document.querySelectorAll('.reveal');
         if ('IntersectionObserver' in window) {
