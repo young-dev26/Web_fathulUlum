@@ -35,12 +35,18 @@
         @keyframes dashboard-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes dashboard-orbit { to { transform: rotate(360deg); } }
         @keyframes scan-line { 0%,100% { transform: translateY(-70px); opacity: .4; } 50% { transform: translateY(70px); opacity: 1; } }
-        @media (max-width: 1023px) { .dashboard-sidebar { transition: max-height .35s ease, opacity .35s ease; max-height: 720px; overflow: hidden; } .dashboard-sidebar.is-collapsed { max-height: 76px; } .dashboard-sidebar.is-collapsed nav, .dashboard-sidebar.is-collapsed .dashboard-account { display: none; } }
+        .dashboard-menu-button { border: 2px solid #10211d; color: #075b47; transition: background-color .2s ease, transform .2s ease; }
+        .dashboard-menu-button:hover { background: #ecfdf5; transform: translateY(-1px); }
+        .dashboard-menu-button i { font-size: 1.35rem; }
+        .dashboard-overlay { background: rgba(6, 47, 39, .42); }
+        @media (min-width: 1024px) { .dashboard-sidebar { transition: transform .3s ease; } .dashboard-sidebar.is-collapsed { transform: translateX(-100%); } .dashboard-content.is-expanded { margin-left: 0; } }
+        @media (max-width: 1023px) { .dashboard-sidebar { transition: max-height .35s ease, opacity .35s ease; max-height: 720px; overflow: hidden; } .dashboard-sidebar.is-collapsed { max-height: 0; opacity: 0; } }
         @media (prefers-reduced-motion: reduce) { .dashboard-sidebar::after, .dashboard-content, .dashboard-toast, .scan-line { animation: none; } .dashboard-sidebar, .dashboard-nav-link, .dashboard-card { transition: none; } }
     </style>
 </head>
 <body class="bg-[#f4f8f5] text-slate-800">
     <div class="dashboard-shell min-h-screen lg:flex">
+        <div data-dashboard-overlay class="dashboard-overlay fixed inset-0 z-10 hidden lg:hidden"></div>
         <aside data-dashboard-sidebar class="dashboard-sidebar relative z-20 w-full text-white lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col">
             <div class="flex items-center justify-between border-b border-white/10 px-6 py-5">
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
@@ -52,7 +58,7 @@
                         <small class="text-xs text-emerald-100/60">Portal Administrasi</small>
                     </span>
                 </a>
-                <button type="button" data-dashboard-toggle aria-expanded="true" class="text-amber-300 lg:hidden" title="Buka atau tutup menu"><i class="fa-solid fa-chevron-up"></i></button>
+                <button type="button" data-dashboard-toggle aria-expanded="true" class="text-amber-300" title="Tutup menu navigasi"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <nav class="flex gap-1 overflow-x-auto px-4 py-4 lg:block lg:flex-1 lg:space-y-1">
@@ -115,16 +121,23 @@
             </div>
         </aside>
 
-        <main class="dashboard-content w-full lg:ml-72">
+        <main data-dashboard-content class="dashboard-content w-full lg:ml-72">
             <header class="sticky top-0 z-10 flex items-center justify-between border-b border-emerald-950/5 bg-white/75 px-5 py-4 backdrop-blur-xl lg:px-10">
-                <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[.2em] text-emerald-700/60">Portal Fathul Ulum</p>
-                    <p class="mt-1 text-sm font-semibold text-emerald-950">{{ now()->isoFormat('dddd, D MMMM Y') }}</p>
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 lg:hidden">
+                        <span class="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-800 text-amber-300 shadow-sm"><i class="fa-solid fa-mosque text-xl"></i></span>
+                        <span class="block"><strong class="block text-base leading-tight text-emerald-950 sm:text-lg">Yayasan PP. Fathul Ulum</strong><small class="mt-1 block text-[10px] uppercase tracking-[.22em] text-teal-700/70 sm:text-xs">Poteran · Talango</small></span>
+                    </a>
+                    <div class="hidden lg:block">
+                        <p class="text-[10px] font-bold uppercase tracking-[.2em] text-emerald-700/60">Portal Fathul Ulum</p>
+                        <p class="mt-1 text-sm font-semibold text-emerald-950">{{ now()->isoFormat('dddd, D MMMM Y') }}</p>
+                    </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="hidden text-right sm:block"><strong class="block text-sm text-emerald-950">{{ auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'Pengguna' }}</strong><small class="text-[10px] uppercase tracking-[.15em] text-slate-400">{{ auth()->user()->effectiveRole() ?? 'user' }}</small></span>
-                    <span class="grid h-10 w-10 place-items-center rounded-full bg-amber-300 font-display text-lg text-emerald-950">{{ strtoupper(substr(auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'P', 0, 1)) }}</span>
-                    <form class="lg:hidden" action="{{ route('logout') }}" method="post">
+                    <button type="button" data-dashboard-open aria-expanded="false" class="dashboard-menu-button grid h-12 w-12 place-items-center rounded-xl bg-white lg:order-last" title="Buka menu navigasi" aria-label="Buka menu navigasi"><i class="fa-solid fa-bars"></i></button>
+                    <span class="hidden text-right lg:block"><strong class="block text-sm text-emerald-950">{{ auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'Pengguna' }}</strong><small class="text-[10px] uppercase tracking-[.15em] text-slate-400">{{ auth()->user()->effectiveRole() ?? 'user' }}</small></span>
+                    <span class="hidden h-10 w-10 place-items-center rounded-full bg-amber-300 font-display text-lg text-emerald-950 lg:grid">{{ strtoupper(substr(auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'P', 0, 1)) }}</span>
+                    <form class="hidden lg:block" action="{{ route('logout') }}" method="post">
                         @csrf
                         <button type="submit" class="grid h-10 w-10 place-items-center rounded-lg border border-emerald-900/10 text-emerald-800" title="Keluar" aria-label="Keluar dari portal">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i>
@@ -142,12 +155,25 @@
     </div>
     <script>
         const dashboardToggle = document.querySelector('[data-dashboard-toggle]');
+        const dashboardOpen = document.querySelector('[data-dashboard-open]');
         const dashboardSidebar = document.querySelector('[data-dashboard-sidebar]');
-        dashboardToggle?.addEventListener('click', () => {
-            const collapsed = dashboardSidebar.classList.toggle('is-collapsed');
-            dashboardToggle.setAttribute('aria-expanded', String(!collapsed));
-            dashboardToggle.innerHTML = `<i class="fa-solid fa-chevron-${collapsed ? 'down' : 'up'}"></i>`;
-        });
+        const dashboardOverlay = document.querySelector('[data-dashboard-overlay]');
+        const dashboardContent = document.querySelector('[data-dashboard-content]');
+        const setDashboardMenu = (open) => {
+            dashboardSidebar.classList.toggle('is-collapsed', !open);
+            dashboardOverlay?.classList.toggle('hidden', !open);
+            dashboardOpen?.setAttribute('aria-expanded', String(open));
+            dashboardOpen?.setAttribute('title', open ? 'Tutup menu navigasi' : 'Buka menu navigasi');
+            dashboardToggle?.setAttribute('aria-expanded', String(open));
+            dashboardToggle?.setAttribute('title', open ? 'Tutup menu navigasi' : 'Buka menu navigasi');
+            dashboardToggle.innerHTML = `<i class="fa-solid fa-${open ? 'xmark' : 'bars'}"></i>`;
+            dashboardContent?.classList.toggle('is-expanded', !open);
+        };
+        dashboardOpen?.addEventListener('click', () => setDashboardMenu(true));
+        dashboardToggle?.addEventListener('click', () => setDashboardMenu(false));
+        dashboardOverlay?.addEventListener('click', () => setDashboardMenu(false));
+        document.querySelectorAll('.dashboard-nav-link').forEach((link) => link.addEventListener('click', () => setDashboardMenu(false)));
+        setDashboardMenu(false);
 
         const currentPath = window.location.pathname;
         document.querySelectorAll('.dashboard-nav-link').forEach((link) => {
