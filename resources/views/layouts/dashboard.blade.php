@@ -41,11 +41,11 @@
         .dashboard-overlay { background: rgba(6, 47, 39, .42); }
         @media (min-width: 1024px) { .dashboard-sidebar { transition: transform .3s ease; } .dashboard-sidebar.is-collapsed { transform: translateX(-100%); } .dashboard-content.is-expanded { margin-left: 0; } }
         @media (max-width: 1023px) {
-            .dashboard-sidebar { position: fixed; inset: 76px 0 auto; max-height: calc(100vh - 76px); overflow-y: auto; transition: max-height .35s ease, opacity .35s ease; }
+            .dashboard-sidebar { display: none; position: fixed; inset: 76px 0 auto; max-height: calc(100vh - 76px); overflow-y: auto; }
+            .dashboard-sidebar.is-open { display: block; }
             .dashboard-sidebar > div:first-child { display: none; }
             .dashboard-sidebar nav { display: block; overflow: visible; padding: 1rem 1.25rem; }
             .dashboard-sidebar nav .dashboard-nav-link { white-space: normal; }
-            .dashboard-sidebar.is-collapsed { max-height: 0; opacity: 0; pointer-events: none; }
             .dashboard-account { display: block; }
             .dashboard-overlay { top: 76px; }
         }
@@ -168,7 +168,7 @@
         const dashboardOverlay = document.querySelector('[data-dashboard-overlay]');
         const dashboardContent = document.querySelector('[data-dashboard-content]');
         const setDashboardMenu = (open) => {
-            dashboardSidebar.classList.toggle('is-collapsed', !open);
+            dashboardSidebar.classList.toggle('is-open', open);
             dashboardOverlay?.classList.toggle('hidden', !open);
             dashboardOpen?.setAttribute('aria-expanded', String(open));
             dashboardOpen?.setAttribute('title', open ? 'Tutup menu navigasi' : 'Buka menu navigasi');
