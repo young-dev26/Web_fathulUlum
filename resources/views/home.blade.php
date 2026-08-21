@@ -10,7 +10,7 @@
         <div class="hero-orbit pointer-events-none absolute -right-24 top-20 h-[420px] w-[420px] rounded-full border border-amber-300/25 border-dashed lg:right-16 lg:top-24"></div>
         <div class="pointer-events-none absolute right-16 top-36 h-3 w-3 rounded-full bg-amber-300 shadow-[0_0_0_8px_rgba(252,211,77,.15),0_0_36px_12px_rgba(252,211,77,.45)] lg:right-80"></div>
 
-        <div class="relative mx-auto max-w-7xl px-5 pb-16 pt-24 sm:px-6 lg:px-8 lg:pb-24 lg:pt-28">
+        <div class="relative mx-auto max-w-7xl px-5 pb-16 pt-12 sm:px-6 lg:px-8 lg:pb-24 lg:pt-6">
             <div class="grid items-center gap-12 lg:grid-cols-[1fr_.78fr]">
                 <div class="reveal">
                     <span class="inline-flex items-center gap-2 rounded-full border border-amber-200/30 bg-amber-200/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[.25em] text-amber-200 backdrop-blur">
@@ -18,7 +18,7 @@
                         {{ $siteSettings['hero_badge'] }}
                     </span>
 
-                    <h1 class="mt-7 max-w-3xl font-display text-5xl leading-[.95] tracking-tight sm:text-6xl lg:text-[6.8rem]">
+                    <h1 class="text-shimmer mt-7 max-w-3xl font-display text-5xl leading-[.95] tracking-tight sm:text-6xl lg:text-[6.8rem]">
                         {{ $siteSettings['hero_title'] }}
                     </h1>
 
