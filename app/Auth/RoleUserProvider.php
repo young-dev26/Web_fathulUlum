@@ -4,6 +4,7 @@ namespace App\Auth;
 
 use App\Models\ParentProfile;
 use App\Models\Student;
+use App\Models\StaffTu;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -19,6 +20,7 @@ class RoleUserProvider implements UserProvider
             'admin' => User::class,
             'siswa' => Student::class,
             'guru' => Teacher::class,
+            'staff_tu' => StaffTu::class,
             'orang_tua' => ParentProfile::class,
             default => null,
         };
@@ -40,19 +42,28 @@ class RoleUserProvider implements UserProvider
 
     public function retrieveByCredentials(#[\SensitiveParameter] array $credentials)
     {
-        $email = $credentials['email'] ?? null;
-        if (! $email) {
+        $role = $credentials['role'] ?? null;
+        $identifier = trim((string) ($credentials['identifier'] ?? ''));
+        if (! $role && ! empty($credentials['email'])) {
+            foreach ([User::class, Student::class, Teacher::class, StaffTu::class, ParentProfile::class] as $model) {
+                $user = $model::where('email', $credentials['email'])->first();
+                if ($user) {
+                    return $user;
+                }
+            }
+        }
+        if (! $role || $identifier === '') {
             return null;
         }
 
-        foreach ([User::class, Student::class, Teacher::class, ParentProfile::class] as $model) {
-            $user = $model::where('email', $email)->first();
-            if ($user) {
-                return $user;
-            }
-        }
-
-        return null;
+        return match ($role) {
+            'admin' => User::where('email', $identifier)->where('role', 'admin')->first(),
+            'staff_tu' => StaffTu::where('nip', $identifier)->first(),
+            'guru' => Teacher::where('nip', $identifier)->orWhere('nip_nuptk', $identifier)->first(),
+            'siswa' => Student::where('nis', $identifier)->orWhere('nisn', $identifier)->first(),
+            'orang_tua' => ParentProfile::where('nomor_hp', $identifier)->orWhere('telepon', $identifier)->first(),
+            default => null,
+        };
     }
 
     public function validateCredentials(Authenticatable $user, #[\SensitiveParameter] array $credentials): bool

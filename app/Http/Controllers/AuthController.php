@@ -12,13 +12,15 @@ class AuthController extends Controller
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'role' => ['nullable', 'in:admin,staff_tu,guru,siswa,orang_tua'],
+            'identifier' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'email'],
             'password' => ['required', 'string'],
         ]);
 
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => 'Email atau kata sandi yang Anda masukkan tidak sesuai.',
+                'identifier' => 'Identitas login atau kata sandi yang Anda masukkan tidak sesuai.',
             ]);
         }
 

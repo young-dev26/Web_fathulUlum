@@ -13,3 +13,21 @@ html { scroll-behavior: smooth; }
 body { background: #f7faf8; color: var(--ink); }
 .font-display { font-family: var(--font-display); }
 .hero-grid { background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 42px 42px; }
+.auth-stage { isolation: isolate; }
+.auth-stage::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 12% 15%, rgba(245,158,11,.18), transparent 28%), radial-gradient(circle at 88% 78%, rgba(6,95,70,.14), transparent 30%); z-index: -2; }
+.auth-grid { background-image: linear-gradient(rgba(255,255,255,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.09) 1px, transparent 1px); background-size: 32px 32px; }
+.auth-spark { position: absolute; border: 1px solid rgba(6,95,70,.12); border-radius: 999px; z-index: -1; animation: auth-float 8s ease-in-out infinite; }
+.auth-spark-one { width: 17rem; height: 17rem; top: 8%; left: -8rem; }
+.auth-spark-two { width: 24rem; height: 24rem; right: -11rem; bottom: -8rem; animation-delay: -3s; }
+.auth-tabs { position: relative; display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e2e8f0; }
+.auth-tab { position: relative; z-index: 1; padding: .75rem .5rem; color: #94a3b8; font-size: .875rem; font-weight: 700; transition: color .3s ease; }
+.auth-tab.is-active { color: #065f46; }
+.auth-tab-indicator { position: absolute; bottom: -1px; left: 0; width: 50%; height: 3px; border-radius: 3px 3px 0 0; background: #f59e0b; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.auth-tab:nth-child(2).is-active ~ .auth-tab-indicator { transform: translateX(100%); }
+.auth-panels { display: grid; overflow: hidden; }
+.auth-panel { grid-area: 1 / 1; opacity: 0; pointer-events: none; transform: translateX(26px); transition: opacity .35s ease, transform .45s cubic-bezier(.2,.8,.2,1); }
+.auth-panel.is-active { opacity: 1; pointer-events: auto; transform: translateX(0); }
+.auth-submit { transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease; }
+.auth-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(6,95,70,.16); }
+@keyframes auth-float { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-18px) rotate(8deg); } }
+@media (prefers-reduced-motion: reduce) { .auth-spark, .auth-panel, .auth-tab-indicator, .auth-submit { animation: none; transition: none; } }

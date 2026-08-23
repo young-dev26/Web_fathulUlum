@@ -9,28 +9,53 @@ use App\Http\Controllers\StudentLeaveRequestController;
 use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\PpdbApplicationController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ParentController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GradeController;
+use App\Http\Controllers\LessonAttendanceController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/mi', [HomeController::class, 'mi'])->name('mi');
 Route::get('/mts', [HomeController::class, 'mts'])->name('mts');
 Route::get('/ppdb', [HomeController::class, 'ppdb'])->name('ppdb');
+Route::get('/berita/{index}', [HomeController::class, 'news'])->whereNumber('index')->name('news.show');
 Route::get('/ppdb/daftar', [PpdbApplicationController::class, 'create'])->name('ppdb.register');
 Route::post('/ppdb/daftar', [PpdbApplicationController::class, 'store'])->name('ppdb.register.store');
 Route::get('/login', [HomeController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
+Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
+	Route::get('/profil', [ProfileController::class, 'edit'])->name('profile.edit');
+	Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
+	Route::get('/raport', [GradeController::class, 'index'])->name('grades.index');
+	Route::get('/absensi-pelajaran', [LessonAttendanceController::class, 'index'])->name('lesson-attendance.index');
+});
+
+Route::middleware(['auth', 'role:admin,staff_tu,guru'])->prefix('dashboard')->name('dashboard.')->group(function () {
+	Route::post('/raport', [GradeController::class, 'store'])->name('grades.store');
+	Route::post('/jadwal/{schedule}/buka-sesi', [LessonAttendanceController::class, 'open'])->name('lesson-attendance.open');
+	Route::get('/sesi-pelajaran/{session}', [LessonAttendanceController::class, 'show'])->name('lesson-attendance.show');
+	Route::post('/sesi-pelajaran/{session}', [LessonAttendanceController::class, 'store'])->name('lesson-attendance.store');
+});
 
 Route::middleware(['auth', 'role:admin'])->prefix('dashboard')->name('dashboard.')->group(function () {
 	Route::get('/site-settings', [SiteSettingController::class, 'edit'])->name('site-settings.edit');
 	Route::put('/site-settings', [SiteSettingController::class, 'update'])->name('site-settings.update');
 	Route::get('/ppdb', [PpdbApplicationController::class, 'index'])->name('ppdb.index');
 	Route::put('/ppdb/{application}', [PpdbApplicationController::class, 'update'])->name('ppdb.update');
+	Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+	Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
+	Route::put('/payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
+	Route::get('/parents', [ParentController::class, 'index'])->name('parents.index');
+	Route::post('/parents', [ParentController::class, 'store'])->name('parents.store');
+	Route::put('/parents/{parent}', [ParentController::class, 'update'])->name('parents.update');
 	Route::resource('/teachers', TeacherController::class)->except(['show']);
 });
 
-Route::middleware(['auth', 'role:admin,guru'])->prefix('dashboard')->name('dashboard.')->group(function () {
+Route::middleware(['auth', 'role:admin,staff_tu,guru'])->prefix('dashboard')->name('dashboard.')->group(function () {
 	Route::get('/scan-qr', [AttendanceController::class, 'scanner'])->name('scan');
 	Route::get('/scan-qr/students', [AttendanceController::class, 'searchStudents'])->name('scan.students');
 	Route::post('/scan-qr', [AttendanceController::class, 'scan'])->name('scan.store');
@@ -56,4 +81,8 @@ Route::middleware(['auth', 'role:siswa'])->prefix('dashboard')->name('dashboard.
 	Route::get('/my-card', fn () => app(StudentController::class)->card(auth()->user()))->name('card');
 	Route::get('/leave-requests', [StudentLeaveRequestController::class, 'indexForStudent'])->name('leave-requests.index');
 	Route::post('/leave-requests', [StudentLeaveRequestController::class, 'store'])->name('leave-requests.store');
+});
+
+Route::middleware(['auth', 'role:orang_tua'])->prefix('dashboard')->name('dashboard.parent.')->group(function () {
+	Route::get('/children', [DashboardController::class, 'parentChildren'])->name('children');
 });

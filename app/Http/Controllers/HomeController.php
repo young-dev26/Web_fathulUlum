@@ -22,11 +22,7 @@ class HomeController extends Controller
             ['icon' => 'fa-chart-line', 'title' => 'Potensi terus diasah', 'description' => 'Siswa didorong aktif, kreatif, dan siap menghadapi tantangan masa depan.'],
         ];
 
-        $news = SiteSetting::value('news', [
-            ['date' => '12 Juni 2026', 'tag' => 'Pengumuman', 'title' => 'Pendaftaran siswa baru tahun ajaran 2026/2027', 'excerpt' => 'Informasi jadwal, syarat, dan proses PPDB resmi akan segera dibuka untuk calon siswa baru.'],
-            ['date' => '04 Juni 2026', 'tag' => 'Kegiatan', 'title' => 'Semarak prestasi akhir tahun', 'excerpt' => 'Berbagai kegiatan apresiasi, lomba, dan program pembelajaran memperkuat semangat siswa.'],
-            ['date' => '28 Mei 2026', 'tag' => 'Sekolah', 'title' => 'Guru mengikuti penguatan program pembelajaran', 'excerpt' => 'Komitmen pendidik dalam meningkatkan kualitas pembelajaran dan dukungan bagi siswa.'],
-        ]);
+        $news = $this->newsItems();
 
         $siteSettings = [
             'hero_badge' => SiteSetting::value('hero_badge', 'Sekolah berbasis pesantren'),
@@ -53,6 +49,8 @@ class HomeController extends Controller
             'title' => 'MI Fathul Ulum',
             'description' => 'Ruang tumbuh anak-anak Poteran untuk mengenal ilmu, adab, dan kemandirian sejak dini.',
             'accent' => 'emerald',
+            'unit' => 'MI',
+            'details' => ['Kelas 1-6 dengan pendampingan dasar yang hangat.', 'Pembelajaran agama dan umum yang seimbang.', 'Kegiatan yang menumbuhkan kemandirian dan percaya diri.'],
         ]);
     }
 
@@ -63,6 +61,8 @@ class HomeController extends Controller
             'title' => 'MTs Fathul Ulum',
             'description' => 'Mendampingi siswa remaja menyiapkan masa depan dengan ilmu pengetahuan, karakter, dan kepercayaan diri.',
             'accent' => 'amber',
+            'unit' => 'MTs',
+            'details' => ['Kelas 7-9 untuk menguatkan ilmu dan karakter remaja.', 'Pendampingan akademik dan kegiatan pengembangan diri.', 'Lingkungan belajar yang mendorong kemandirian dan prestasi.'],
         ]);
     }
 
@@ -81,5 +81,29 @@ class HomeController extends Controller
     public function login(): View
     {
         return view('auth.login');
+    }
+
+    public function news(int $index): View
+    {
+        $news = $this->newsItems();
+        abort_unless(isset($news[$index]), 404);
+
+        return view('news.show', ['article' => $news[$index]]);
+    }
+
+    private function defaultNews(): array
+    {
+        return [
+            ['date' => '12 Juni 2026', 'tag' => 'Pengumuman', 'title' => 'Pendaftaran siswa baru tahun ajaran 2026/2027', 'excerpt' => 'Informasi jadwal, syarat, dan proses PPDB resmi akan segera dibuka untuk calon siswa baru.'],
+            ['date' => '04 Juni 2026', 'tag' => 'Kegiatan', 'title' => 'Semarak prestasi akhir tahun', 'excerpt' => 'Berbagai kegiatan apresiasi, lomba, dan program pembelajaran memperkuat semangat siswa.'],
+            ['date' => '28 Mei 2026', 'tag' => 'Sekolah', 'title' => 'Guru mengikuti penguatan program pembelajaran', 'excerpt' => 'Komitmen pendidik dalam meningkatkan kualitas pembelajaran dan dukungan bagi siswa.'],
+        ];
+    }
+
+    private function newsItems(): array
+    {
+        $news = SiteSetting::value('news', $this->defaultNews());
+
+        return is_array($news) && count($news) > 0 ? $news : $this->defaultNews();
     }
 }

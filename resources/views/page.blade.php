@@ -13,6 +13,11 @@
     </section>
 
     <section class="mx-auto max-w-7xl px-5 py-20 sm:px-6 lg:px-8">
+        @isset($unit)
+            <div class="mb-8 rounded-2xl border border-emerald-100 bg-emerald-50 p-5 text-sm leading-6 text-emerald-900">
+                <strong>{{ $unit }} Fathul Ulum</strong> memiliki program yang dirancang sesuai tahap perkembangan peserta didik.
+            </div>
+        @endisset
         <div class="grid gap-6 md:grid-cols-3">
             <div class="rounded-3xl bg-white p-7 shadow-sm ring-1 ring-slate-200">
                 <span class="grid h-12 w-12 place-items-center rounded-2xl bg-amber-100 text-xl text-amber-700"><i class="fa-solid fa-circle-info"></i></span>
@@ -34,6 +39,17 @@
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
+
+            @isset($details)
+                <div class="rounded-3xl bg-slate-50 p-7 shadow-sm ring-1 ring-slate-200 md:col-span-3">
+                    <h2 class="font-display text-2xl text-emerald-950">Yang akan ditemukan</h2>
+                    <ul class="mt-4 grid gap-3 text-sm leading-6 text-slate-600 sm:grid-cols-3">
+                        @foreach ($details as $detail)
+                            <li class="flex gap-2"><i class="fa-solid fa-circle-check mt-1 text-amber-500"></i><span>{{ $detail }}</span></li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endisset
         </div>
     </section>
 @endsection

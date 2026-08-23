@@ -18,6 +18,7 @@
         .dashboard-nav-link:hover { transform: translateX(4px); background: rgba(255,255,255,.1); }
         .dashboard-nav-link.is-active { background: rgba(255,255,255,.14); color: #fff; box-shadow: inset 3px 0 0 #fbbf24; }
         .dashboard-nav-link.is-active i { color: #fcd34d; }
+        .dashboard-mobile-meta { display: none; }
         .dashboard-content { animation: dashboard-enter .55s cubic-bezier(.2,.75,.25,1) both; }
         .dashboard-card { border: 1px solid rgba(15,118,110,.08); box-shadow: 0 14px 40px rgba(15,61,49,.06); transition: transform .3s ease, box-shadow .3s ease; }
         .dashboard-card:hover { transform: translateY(-4px); box-shadow: 0 20px 44px rgba(15,61,49,.1); }
@@ -36,11 +37,26 @@
         @keyframes dashboard-orbit { to { transform: rotate(360deg); } }
         @keyframes scan-line { 0%,100% { transform: translateY(-70px); opacity: .4; } 50% { transform: translateY(70px); opacity: 1; } }
         @media (prefers-reduced-motion: reduce) { .dashboard-sidebar::after, .dashboard-content, .dashboard-toast, .scan-line { animation: none; } .dashboard-sidebar, .dashboard-nav-link, .dashboard-card { transition: none; } }
+        @media (max-width: 1023px) {
+            .dashboard-sidebar { position: sticky; top: 0; box-shadow: 0 8px 24px rgba(6,95,70,.16); }
+            .dashboard-sidebar::after { display: none; }
+            .dashboard-sidebar > div:first-child { min-height: 68px; padding: .75rem 1rem; }
+            .dashboard-sidebar > div:first-child .h-10 { height: 2.5rem; width: 2.5rem; }
+            .dashboard-sidebar > div:first-child small { display: none; }
+            .dashboard-mobile-meta { display: block; min-width: 0; }
+            .dashboard-mobile-meta strong, .dashboard-mobile-meta small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .dashboard-sidebar nav, .dashboard-sidebar .dashboard-account { display: none; }
+            .dashboard-sidebar:not(.is-collapsed) nav { display: flex; flex-direction: column; max-height: min(70vh, 30rem); overflow-y: auto; padding: .5rem .75rem .75rem; }
+            .dashboard-sidebar:not(.is-collapsed) .dashboard-account { display: block; padding: .75rem 1rem 1rem; }
+            .dashboard-sidebar:not(.is-collapsed) .dashboard-nav-link { padding: .7rem .75rem; }
+            .dashboard-sidebar:not(.is-collapsed) .dashboard-nav-link:hover { transform: none; }
+            .dashboard-content > header { display: none; }
+        }
     </style>
 </head>
 <body class="bg-[#f4f8f5] text-slate-800">
     <div class="dashboard-shell min-h-screen lg:flex">
-        <aside data-dashboard-sidebar class="dashboard-sidebar relative z-20 w-full text-white lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col">
+        <aside data-dashboard-sidebar class="dashboard-sidebar is-collapsed relative z-20 w-full text-white lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col">
             <div class="flex items-center justify-between border-b border-white/10 px-6 py-5">
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
                     <span class="grid h-10 w-10 place-items-center rounded-lg bg-amber-400 text-emerald-950">
@@ -51,7 +67,8 @@
                         <small class="text-xs text-emerald-100/60">Portal Administrasi</small>
                     </span>
                 </a>
-                <button type="button" data-dashboard-toggle aria-expanded="true" class="text-amber-300 lg:hidden" title="Buka atau tutup menu"><i class="fa-solid fa-chevron-up"></i></button>
+                <div class="dashboard-mobile-meta ml-auto mr-3"><strong class="text-xs">{{ auth()->user()->nama_lengkap ?? auth()->user()->name ?? 'Pengguna' }}</strong><small class="mt-0.5 text-[10px] uppercase tracking-wider text-emerald-100/60">{{ auth()->user()->effectiveRole() ?? 'user' }}</small></div>
+                <button type="button" data-dashboard-toggle aria-expanded="false" class="grid h-10 w-10 place-items-center rounded-lg border border-white/15 text-amber-300 lg:hidden" title="Buka menu navigasi"><i class="fa-solid fa-bars"></i></button>
             </div>
 
             <nav class="flex gap-1 overflow-x-auto px-4 py-4 lg:block lg:flex-1 lg:space-y-1">
@@ -60,15 +77,27 @@
                 </a>
 
                 @if (auth()->user()->effectiveRole() === 'siswa')
+                    <a href="{{ route('dashboard.lesson-attendance.index') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold"><i class="fa-solid fa-chalkboard mr-3 w-4 text-amber-300"></i>Absensi pelajaran</a>
                     <a href="{{ route('dashboard.student.attendance') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold">
                         <i class="fa-solid fa-calendar-check mr-3 w-4 text-amber-300"></i>Absensi Saya
                     </a>
                     <a href="{{ route('dashboard.student.card') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold">
                         <i class="fa-solid fa-id-card mr-3 w-4 text-amber-300"></i>Kartu Pelajar
                     </a>
+                    <a href="{{ route('dashboard.grades.index') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold"><i class="fa-solid fa-chart-line mr-3 w-4 text-amber-300"></i>Raport saya</a>
                 @endif
 
-                @if (in_array(auth()->user()->effectiveRole(), ['admin', 'guru'], true))
+                @if (auth()->user()->effectiveRole() === 'orang_tua')
+                    <a href="{{ route('dashboard.lesson-attendance.index') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold"><i class="fa-solid fa-chalkboard mr-3 w-4 text-amber-300"></i>Absensi anak</a>
+                    <a href="{{ route('dashboard.parent.children') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold">
+                        <i class="fa-solid fa-children mr-3 w-4 text-amber-300"></i>Data anak
+                    </a>
+                    <a href="{{ route('dashboard.grades.index') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold"><i class="fa-solid fa-chart-line mr-3 w-4 text-amber-300"></i>Raport anak</a>
+                @endif
+
+                @if (in_array(auth()->user()->effectiveRole(), ['admin', 'staff_tu', 'guru'], true))
+                    <a href="{{ route('dashboard.lesson-attendance.index') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold"><i class="fa-solid fa-chalkboard mr-3 w-4 text-amber-300"></i>Absensi pelajaran</a>
+                    <a href="{{ route('dashboard.grades.index') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold"><i class="fa-solid fa-chart-line mr-3 w-4 text-amber-300"></i>Kelola raport</a>
                     <a href="{{ route('dashboard.scan') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold">
                         <i class="fa-solid fa-qrcode mr-3 w-4 text-amber-300"></i>Scan Absensi
                     </a>
@@ -79,6 +108,10 @@
                         <i class="fa-solid fa-file-circle-check mr-3 w-4 text-amber-300"></i>Persetujuan Izin
                     </a>
                 @endif
+
+                <a href="{{ route('dashboard.profile.edit') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold">
+                    <i class="fa-solid fa-user-gear mr-3 w-4 text-amber-300"></i>Profil saya
+                </a>
 
                 @if (auth()->user()->effectiveRole() === 'siswa')
                     <a href="{{ route('dashboard.student.leave-requests.index') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold">
@@ -98,6 +131,12 @@
                     </a>
                     <a href="{{ route('dashboard.ppdb.index') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold">
                         <i class="fa-solid fa-file-signature mr-3 w-4 text-amber-300"></i>Pendaftar PPDB
+                    </a>
+                    <a href="{{ route('dashboard.payments.index') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold">
+                        <i class="fa-solid fa-wallet mr-3 w-4 text-amber-300"></i>Pembayaran
+                    </a>
+                    <a href="{{ route('dashboard.parents.index') }}" class="dashboard-nav-link block whitespace-nowrap rounded-lg px-3 py-2.5 text-sm font-bold">
+                        <i class="fa-solid fa-user-group mr-3 w-4 text-amber-300"></i>Orang tua
                     </a>
                 @endif
             </nav>
@@ -145,7 +184,8 @@
         dashboardToggle?.addEventListener('click', () => {
             const collapsed = dashboardSidebar.classList.toggle('is-collapsed');
             dashboardToggle.setAttribute('aria-expanded', String(!collapsed));
-            dashboardToggle.innerHTML = `<i class="fa-solid fa-chevron-${collapsed ? 'down' : 'up'}"></i>`;
+            dashboardToggle.setAttribute('title', collapsed ? 'Buka menu navigasi' : 'Tutup menu navigasi');
+            dashboardToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
         });
 
         const currentPath = window.location.pathname;

@@ -14,7 +14,7 @@ class Teacher extends Authenticatable
         return 'guru:'.$this->getKey();
     }
 
-    protected $fillable = ['email', 'password', 'nip_nuptk', 'nama_lengkap', 'unit', 'mata_pelajaran'];
+    protected $fillable = ['email', 'password', 'nip', 'nip_nuptk', 'nama_lengkap', 'unit', 'mata_pelajaran'];
 
     protected $hidden = ['password', 'remember_token'];
 

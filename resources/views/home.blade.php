@@ -2,11 +2,11 @@
 
 @section('content')
     <section class="relative min-h-[680px] overflow-hidden bg-[#062f27] text-white lg:min-h-[760px]">
-        <img src="{{ $siteSettings['hero_image'] }}" alt="Gedung sekolah" class="hero-photo pointer-events-none absolute inset-0 h-full w-full object-cover opacity-55">
-        <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,38,31,.98)_0%,rgba(3,52,42,.84)_42%,rgba(3,52,42,.35)_100%)]"></div>
-        <div class="hero-grid pointer-events-none absolute inset-0 opacity-35"></div>
-        <div class="hero-sheen pointer-events-none absolute -inset-y-20 left-1/3 w-1/3 rotate-12 bg-amber-200/20 blur-3xl"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(251,191,36,0.22),transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.12),transparent_22%)]"></div>
+        <img src="{{ $siteSettings['hero_image'] }}" alt="Gedung sekolah" class="hero-photo pointer-events-none absolute inset-0 h-full w-full object-cover opacity-75">
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(3,38,31,.72)_0%,rgba(3,52,42,.52)_42%,rgba(3,52,42,.16)_100%)]"></div>
+        <div class="hero-grid pointer-events-none absolute inset-0 opacity-20"></div>
+        <div class="hero-sheen pointer-events-none absolute -inset-y-20 left-1/3 w-1/3 rotate-12 bg-amber-200/10 blur-3xl"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(251,191,36,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(255,255,255,0.08),transparent_22%)]"></div>
         <div class="hero-orbit pointer-events-none absolute -right-24 top-20 h-[420px] w-[420px] rounded-full border border-amber-300/25 border-dashed lg:right-16 lg:top-24"></div>
         <div class="pointer-events-none absolute right-16 top-36 h-3 w-3 rounded-full bg-amber-300 shadow-[0_0_0_8px_rgba(252,211,77,.15),0_0_36px_12px_rgba(252,211,77,.45)] lg:right-80"></div>
 
@@ -18,8 +18,9 @@
                         {{ $siteSettings['hero_badge'] }}
                     </span>
 
-                    <h1 class="text-shimmer mt-7 max-w-3xl font-display text-5xl leading-[.95] tracking-tight sm:text-6xl lg:text-[6.8rem]">
-                        {{ $siteSettings['hero_title'] }}
+                    <h1 class="mt-7 max-w-3xl font-display text-5xl leading-[.95] tracking-tight sm:text-6xl lg:text-[6.8rem]">
+                        @php($heroTitle = e($siteSettings['hero_title']))
+                        {!! str_ireplace('masa depan', '<span class="text-shimmer">masa depan</span>', $heroTitle) !!}
                     </h1>
 
                     <p class="mt-7 max-w-xl text-base leading-7 text-emerald-50/80 sm:text-lg">
@@ -231,7 +232,7 @@
                         <p class="text-[11px] font-bold uppercase tracking-[.18em] text-amber-600">{{ $item['tag'] }} · {{ $item['date'] }}</p>
                         <h3 class="mt-4 font-display text-2xl leading-tight text-emerald-950">{{ $item['title'] }}</h3>
                         <p class="mt-3 text-sm leading-6 text-slate-500">{{ $item['excerpt'] }}</p>
-                        <a href="{{ route('ppdb') }}" class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-emerald-700">
+                        <a href="{{ route('news.show', $loop->index) }}" class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-emerald-700">
                             Baca selengkapnya
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
